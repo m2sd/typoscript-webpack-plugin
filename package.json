@@ -1,0 +1,33 @@
+{
+  "name": "typoscript-webpack-plugin",
+  "version": "1.0.0",
+  "description": "A simple plugin to generate typoscript statements to include generated assets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m2sd/typoscript-webpack-plugin.git"
+  },
+  "keywords": [
+    "typo3",
+    "typoscript",
+    "webpack",
+    "webpack-plugin"
+  ],
+  "author": "Michael Marcenich <info@m-squared-solutions.it>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m2sd/typoscript-webpack-plugin/issues"
+  },
+  "homepage": "https://github.com/m2sd/typoscript-webpack-plugin#readme",
+  "dependencies": {
+    "deepmerge": "^2.2.1",
+    "just-pick": "^2.1.0"
+  },
+  "peerDependencies": {
+    "webpack": "^4.18.0"
+  },
+  "devDependencies": {}
+}
