@@ -3,9 +3,6 @@
     "version": "1.0.0",
     "description": "A simple plugin to generate typoscript statements to include generated assets",
     "main": "index.js",
-    "files": [
-        "loading"
-    ],
     "scripts": {
         "test": "webpack --config dev/webpack.config.js",
         "lint": "eslint --ignore-path .gitignore .",
