@@ -63,3 +63,9 @@ typings/
 # IDEs
 .idea/
 .vscode/
+
+# local dev environment
+/dev
+!/dev/assets
+!/dev/src
+!/dev/webpack.config.js
