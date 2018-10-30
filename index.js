@@ -157,21 +157,21 @@ class TypoScriptPlugin {
                     if (
                         extension === 'css' &&
                         !additionalTypoScript.find(item =>
-                            item.test(/^allWrap/)
+                            /^allWrap/.test(item)
                         )
                     ) {
                         additionalTypoScript.unshift('allWrap = <!--|-->');
                     } else if (extension === 'js') {
                         if (
                             !additionalTypoScript.find(item =>
-                                item.test(/^async/)
+                                /^async/.test(item)
                             )
                         ) {
                             additionalTypoScript.unshift('async = 1');
                         }
                         if (
                             !additionalTypoScript.find(item =>
-                                item.test(/^defer/)
+                                /^defer/.test(item)
                             )
                         ) {
                             additionalTypoScript.unshift('defer = 1');
