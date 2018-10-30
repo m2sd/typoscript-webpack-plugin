@@ -1,6 +1,6 @@
 {
     "name": "typoscript-webpack-plugin",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "A simple plugin to generate typoscript statements to include generated assets",
     "main": "index.js",
     "scripts": {
