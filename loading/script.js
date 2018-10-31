@@ -41,15 +41,17 @@
     var expected = loaded + loading;
     var check = setInterval(function() {
         if (doc.styleSheets.length >= expected) {
-            doc.getElementById('webpack-plugin-loader').style.opacity = 0;
             setTimeout(function() {
-                doc.querySelectorAll(
-                    '#webpack-plugin-loader,' +
-                        'script[src*="webpack-loading.js"],' +
-                        'link[href*="webpack-loading.css"]'
-                ).forEach(function(node) {
-                    node.parentElement.removeChild(node);
-                });
+                doc.getElementById('webpack-plugin-loader').style.opacity = 0;
+                setTimeout(function() {
+                    doc.querySelectorAll(
+                        '#webpack-plugin-loader,' +
+                            'script[src*="webpack-loading.js"],' +
+                            'link[href*="webpack-loading.css"]'
+                    ).forEach(function(node) {
+                        node.parentElement.removeChild(node);
+                    });
+                }, 500);
             }, 500);
             clearInterval(check);
         }
