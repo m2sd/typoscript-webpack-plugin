@@ -1,8 +1,10 @@
 .sk-circle {
-  margin: 100px auto;
+  margin: -20px;
   width: 40px;
   height: 40px;
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 .sk-circle .sk-child {
   width: 100%;
@@ -17,7 +19,7 @@
   margin: 0 auto;
   width: 15%;
   height: 15%;
-  background-color: #333;
+  background-color: #fff;
   border-radius: 100%;
   -webkit-animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
           animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;

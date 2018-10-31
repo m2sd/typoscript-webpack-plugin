@@ -1,13 +1,16 @@
 .spinner {
-  margin: 100px auto 0;
+  margin: -9px -35px;
   width: 70px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   text-align: center;
 }
 
 .spinner > div {
   width: 18px;
   height: 18px;
-  background-color: #333;
+  background-color: #fff;
 
   border-radius: 100%;
   display: inline-block;

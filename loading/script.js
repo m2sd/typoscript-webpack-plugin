@@ -21,9 +21,37 @@
         return comments;
     }
 
-    root.addEventListener('load', function() {
-        getComments(doc.head).forEach(function(node) {
-            console.log(node.nodeValue);
-        });
+    function createElementFromHTML(htmlString) {
+        var div = document.createElement('div');
+        div.innerHTML = htmlString.trim();
+
+        // Change this to div.childNodes to support multiple top-level nodes
+        return div.firstChild;
+    }
+
+    var loading = 0,
+        loaded = doc.styleSheets.length;
+    getComments(doc.head).forEach(function(node) {
+        if (/^\s*<link\s+rel="stylesheet"/.test(node.nodeValue)) {
+            doc.head.replaceChild(createElementFromHTML(node.nodeValue), node);
+            loading++;
+        }
     });
+
+    var expected = loaded + loading;
+    var check = setInterval(function() {
+        if (doc.styleSheets.length >= expected) {
+            doc.getElementById('webpack-plugin-loader').style.opacity = 0;
+            setTimeout(function() {
+                doc.querySelectorAll(
+                    '#webpack-plugin-loader,' +
+                        'script[src$="webpack-loading.js"],' +
+                        'link[href$="webpack-loading.css"]'
+                ).forEach(function(node) {
+                    node.parentElement.removeChild(node);
+                });
+            }, 500);
+            clearInterval(check);
+        }
+    }, 10);
 })(window, document);

@@ -1,13 +1,17 @@
 .spinner {
-  margin: 100px auto;
+  margin-top: -20px;
+  margin-left: -25px;
   width: 50px;
   height: 40px;
   text-align: center;
   font-size: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 
 .spinner > div {
-  background-color: #333;
+  background-color: #fff;
   height: 100%;
   width: 6px;
   display: inline-block;

@@ -1,12 +1,14 @@
 .spinner {
-  margin: 100px auto;
+  margin: -20px;
   width: 40px;
   height: 40px;
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 
 .cube1, .cube2 {
-  background-color: #333;
+  background-color: #fff;
   width: 15px;
   height: 15px;
   position: absolute;

@@ -227,10 +227,7 @@ class TypoScriptPlugin {
         const inputSrc = {
             js: fs.readFileSync(path.join(localPath, 'script.js'), 'utf8')
         };
-        if (
-            externalPath.length &&
-            fs.exists(path.join(...externalPath, 'style.css'))
-        ) {
+        if (externalPath.length) {
             inputSrc.css = fs.readFileSync(
                 path.join(...externalPath, 'style.css'),
                 'utf8'
@@ -241,10 +238,20 @@ class TypoScriptPlugin {
                 'utf8'
             );
         }
-        if (
-            externalPath.length &&
-            fs.exists(path.join(...externalPath, 'template.html'))
-        ) {
+        inputSrc.css = `#webpack-plugin-loader {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+    background: ${options.background};
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+${inputSrc.css}`;
+
+        if (externalPath.length) {
             inputSrc.html = fs.readFileSync(
                 path.join(...externalPath, 'template.html'),
                 'utf8'
@@ -260,32 +267,34 @@ class TypoScriptPlugin {
         for (const extension of ['js', 'css']) {
             const filename = `webpack-loading.${extension}`;
             const publicFilepath = path.join(publicPath, filename);
+            const includeType =
+                extension === 'css' ? 'includeCSSLibs' : 'includeJSFooterlibs';
+
+            let typoScriptLines = [];
             compilation.assets[filename] = {
                 source: () => inputSrc[extension],
                 size: () => inputSrc[extension].length
             };
-            typoScript.push(
-                `${extension === 'css' ? 'includeCSSLibs' : 'includeJSLibs'} {`,
+            typoScriptLines.push(
                 `webpack_loading = ${publicFilepath}`,
-                '}'
+                'webpack_loading.excludeFromConcatenation = 1'
             );
+            if (extension === 'js') {
+                typoScriptLines.push(
+                    'webpack_loading.async = 1',
+                    'webpack_defer = 1'
+                );
+            }
+            typoScript.push(`${includeType} {`, ...typoScriptLines, '}');
         }
 
         typoScript.push(
             'footerData {',
             '11389465 = TEXT',
             '11389465.value(',
-            '<div id="webpack-loading-plugin">',
+            '<div id="webpack-plugin-loader">',
             inputSrc.html.replace(/^\s*|\s*$/g, ''),
             '</div>',
-            ')',
-            '}',
-            'cssinline {',
-            '11389465 = TEXT',
-            '11389465.value(',
-            `#webpack-loading-plugin {position:absolute; top: 0, left: 0, width: 100%, height: 100%, background: ${
-                options.background
-            }}`,
             ')',
             '}'
         );
