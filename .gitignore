@@ -65,7 +65,4 @@ typings/
 .vscode/
 
 # local dev environment
-/dev
-!/dev/assets
-!/dev/src
-!/dev/webpack.config.js
+/dev/dist/

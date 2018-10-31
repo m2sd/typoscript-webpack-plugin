@@ -62,7 +62,7 @@ const getChunkOptions = (chunk, options = {}, defaults = {}) => {
 
 class TypoScriptPlugin {
     constructor(options) {
-        const defaults = {
+        const pluginDefaults = {
             filename: 'WebpackAssets.typoscript',
             typoScriptPublicPath: '/fileadmin/Resources/Public/',
             typoScriptRootPath: 'page',
@@ -70,19 +70,45 @@ class TypoScriptPlugin {
                 js: 'includeJSFooter',
                 css: 'includeCSS'
             },
-            chunks: null
+            chunks: null,
+            loading: {
+                type: 'default',
+                background: '#2c3e50'
+            }
         };
+        /** @todo BRAKING CHANGE: remove */
+        pluginDefaults.loading = false;
 
-        if (typeof options === 'string') {
-            options = {
-                outputPath: options
+        const pluginOptions = options || {};
+
+        if (typeof pluginOptions === 'string') {
+            pluginOptions = {
+                /** @todo BRAKING CHANGE: change to filename */
+                outputPath: pluginOptions
             };
         }
-        if (!options.outputPath || !path.isAbsolute(options.outputPath)) {
-            options.outputPath = path.dirname(module.parent.filename);
+        /** @todo BRAKING CHANGE: set compiler.options.output.path as default output path */
+        if (
+            !pluginOptions.outputPath ||
+            !path.isAbsolute(pluginOptions.outputPath)
+        ) {
+            pluginOptions.outputPath = path.dirname(module.parent.filename);
         }
-
-        this.options = merge(defaults, options);
+        if (
+            typeof pluginOptions.loading === 'boolean' &&
+            pluginOptions.loading
+        ) {
+            pluginOptions.loading = {
+                type: 'default',
+                background: '#2c3e50'
+            };
+        } else if (typeof pluginOptions.loading === 'string') {
+            pluginOptions.loading = {
+                type: pluginOptions.loading,
+                background: '#2c3e50'
+            };
+        }
+        this.options = merge(pluginDefaults, pluginOptions);
 
         if (this.options.typoScriptIncludeTypeDefaults) {
             this.options.typoScriptIncludeTypeDefaults = convertIncludeTypes(
@@ -105,7 +131,7 @@ class TypoScriptPlugin {
         const output = [];
         options.files.forEach(asset => {
             const assetOutput = [];
-            const extension = asset.match(/\.(js|css)$/)[1];
+            const [, extension] = asset.match(/\.(js|css)$/);
             const name =
                 options.customName || 'webpack_' + (options.name || options.id);
 
@@ -126,6 +152,31 @@ class TypoScriptPlugin {
                     additionalTypoScript.push(
                         ...options.additionalTypoScript[extension]
                     );
+                }
+                if (this.options.loading) {
+                    if (
+                        extension === 'css' &&
+                        !additionalTypoScript.find(item =>
+                            /^allWrap/.test(item)
+                        )
+                    ) {
+                        additionalTypoScript.unshift('allWrap = <!--|-->');
+                    } else if (extension === 'js') {
+                        if (
+                            !additionalTypoScript.find(item =>
+                                /^async/.test(item)
+                            )
+                        ) {
+                            additionalTypoScript.unshift('async = 1');
+                        }
+                        if (
+                            !additionalTypoScript.find(item =>
+                                /^defer/.test(item)
+                            )
+                        ) {
+                            additionalTypoScript.unshift('defer = 1');
+                        }
+                    }
                 }
                 assetOutput.push(
                     ...additionalTypoScript.map(
@@ -155,8 +206,104 @@ class TypoScriptPlugin {
         return output.join('\n');
     }
 
+    generateLoaderTypoScript(options = {}, compilation) {
+        const localPath = path.join(__dirname, 'loading');
+        const externalPath = [];
+        if (
+            typeof options.customSource === 'string' &&
+            path.isAbsolute(options.customSource)
+        ) {
+            externalPath.push(options.customSource);
+            if (options.type) {
+                externalPath.push(type);
+            }
+        } else if (!options.type) {
+            throw new Error(
+                '[typoscript-webpack-plugin]: Either loading.type or loading.customSource must be defined'
+            );
+        }
+
+        const publicPath = this.options.typoScriptPublicPath;
+        const inputSrc = {
+            js: fs.readFileSync(path.join(localPath, 'script.js'), 'utf8')
+        };
+        if (externalPath.length) {
+            inputSrc.css = fs.readFileSync(
+                path.join(...externalPath, 'style.css'),
+                'utf8'
+            );
+        } else {
+            inputSrc.css = fs.readFileSync(
+                path.join(localPath, options.type, 'style.css'),
+                'utf8'
+            );
+        }
+        inputSrc.css = `#webpack-plugin-loader {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+    background: ${options.background};
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+${inputSrc.css}`;
+
+        if (externalPath.length) {
+            inputSrc.html = fs.readFileSync(
+                path.join(...externalPath, 'template.html'),
+                'utf8'
+            );
+        } else {
+            inputSrc.html = fs.readFileSync(
+                path.join(localPath, options.type, 'template.html'),
+                'utf8'
+            );
+        }
+        const typoScript = [];
+
+        for (const extension of ['js', 'css']) {
+            const filename = `webpack-loading.${extension}`;
+            const publicFilepath = path.join(publicPath, filename);
+            const includeType =
+                extension === 'css' ? 'includeCSSLibs' : 'includeJSFooterlibs';
+
+            let typoScriptLines = [];
+            compilation.assets[filename] = {
+                source: () => inputSrc[extension],
+                size: () => inputSrc[extension].length
+            };
+            typoScriptLines.push(
+                `webpack_loading = ${publicFilepath}`,
+                'webpack_loading.excludeFromConcatenation = 1'
+            );
+            if (extension === 'js') {
+                typoScriptLines.push(
+                    'webpack_loading.async = 1',
+                    'webpack_defer = 1'
+                );
+            }
+            typoScript.push(`${includeType} {`, ...typoScriptLines, '}');
+        }
+
+        typoScript.push(
+            'footerData {',
+            '11389465 = TEXT',
+            '11389465.value(',
+            '<div id="webpack-plugin-loader">',
+            inputSrc.html.replace(/^\s*|\s*$/g, ''),
+            '</div>',
+            ')',
+            '}'
+        );
+
+        return typoScript;
+    }
+
     emitTypoScript(compilation, callback) {
-        let output = [];
+        const outputLines = [];
         if (this.options.chunks) {
             this.options.chunks.forEach(chunkOptions => {
                 if (typeof chunkOptions === 'string') {
@@ -169,28 +316,49 @@ class TypoScriptPlugin {
                             ? chunkOptions.id === chunk.id
                             : chunkOptions.name === chunk.name
                 );
-                output.push(this.generateTypoScript(chunk, chunkOptions));
+                outputLines.push(this.generateTypoScript(chunk, chunkOptions));
             });
         } else {
-            output.push(
+            outputLines.push(
                 ...compilation.chunks.map(chunk =>
                     this.generateTypoScript(chunk)
                 )
             );
         }
 
-        output = [this.options.typoScriptRootPath + ' {', ...output, '}'];
+        if (this.options.loading) {
+            outputLines.push(
+                ...this.generateLoaderTypoScript(
+                    this.options.loading,
+                    compilation
+                )
+            );
+        }
 
-        fs.writeFileSync(
-            path.join(this.options.outputPath, this.options.filename),
-            output.join('\n')
+        const output = [
+            this.options.typoScriptRootPath + ' {',
+            ...outputLines,
+            '}'
+        ].join('\n');
+
+        const outputPath = path.join(
+            path.relative(
+                compilation.options.output.path,
+                this.options.outputPath
+            ),
+            this.options.filename
         );
+
+        compilation.assets[outputPath] = {
+            source: () => output,
+            size: () => output.length
+        };
 
         callback();
     }
 
     apply(compiler) {
-        compiler.hooks.afterEmit.tapAsync(
+        compiler.hooks.emit.tapAsync(
             'TypoScriptPlugin',
             (compilation, callback) => {
                 this.emitTypoScript(compilation, callback);
