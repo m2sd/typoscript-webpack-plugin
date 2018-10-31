@@ -1,61 +1,61 @@
 {
-  "name": "typoscript-webpack-plugin",
-  "version": "1.1.0",
-  "description": "A simple plugin to generate typoscript statements to include generated assets",
-  "main": "index.js",
-  "files": [
-    "loading"
-  ],
-  "scripts": {
-    "test": "webpack --config dev/webpack.config.js && node ./dev/insert-template.js",
-    "lint": "eslint --ignore-path .gitignore .",
-    "lint:fix": "eslint --ignore-path .gitignore --fix .",
-    "lint:check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/m2sd/typoscript-webpack-plugin.git"
-  },
-  "keywords": [
-    "typo3",
-    "typoscript",
-    "webpack",
-    "webpack-plugin"
-  ],
-  "author": "Michael Marcenich <info@m-squared-solutions.it>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/m2sd/typoscript-webpack-plugin/issues"
-  },
-  "homepage": "https://github.com/m2sd/typoscript-webpack-plugin#readme",
-  "engines": {
-    "node": ">= 8.9.0",
-    "npm": ">= 5.0.0"
-  },
-  "dependencies": {
-    "deepmerge": "^2.2.1",
-    "just-pick": "^2.1.0"
-  },
-  "peerDependencies": {
-    "webpack": "^4.23.1"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "css-loader": "^1.0.1",
-    "eslint": "^5.7.0",
-    "eslint-config-prettier": "^3.1.0",
-    "eslint-plugin-html": "^4.0.6",
-    "eslint-plugin-prettier": "^3.0.0",
-    "husky": "^1.1.2",
-    "mini-css-extract-plugin": "^0.4.4",
-    "prettier": "^1.14.3",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.23.1",
-    "webpack-cli": "^3.1.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint:check && npm run lint"
+    "name": "typoscript-webpack-plugin",
+    "version": "1.2.0",
+    "description": "A simple plugin to generate typoscript statements to include generated assets",
+    "main": "index.js",
+    "files": [
+        "loading"
+    ],
+    "scripts": {
+        "test": "webpack --config dev/webpack.config.js && node ./dev/insert-template.js",
+        "lint": "eslint --ignore-path .gitignore .",
+        "lint:fix": "eslint --ignore-path .gitignore --fix .",
+        "lint:check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/m2sd/typoscript-webpack-plugin.git"
+    },
+    "keywords": [
+        "typo3",
+        "typoscript",
+        "webpack",
+        "webpack-plugin"
+    ],
+    "author": "Michael Marcenich <info@m-squared-solutions.it>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/m2sd/typoscript-webpack-plugin/issues"
+    },
+    "homepage": "https://github.com/m2sd/typoscript-webpack-plugin#readme",
+    "engines": {
+        "node": ">= 8.9.0",
+        "npm": ">= 5.0.0"
+    },
+    "dependencies": {
+        "deepmerge": "^2.2.1",
+        "just-pick": "^2.1.0"
+    },
+    "peerDependencies": {
+        "webpack": "^4.23.1"
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.0.1",
+        "css-loader": "^1.0.1",
+        "eslint": "^5.7.0",
+        "eslint-config-prettier": "^3.1.0",
+        "eslint-plugin-html": "^4.0.6",
+        "eslint-plugin-prettier": "^3.0.0",
+        "husky": "^1.1.2",
+        "mini-css-extract-plugin": "^0.4.4",
+        "prettier": "^1.14.3",
+        "style-loader": "^0.23.1",
+        "webpack": "^4.23.1",
+        "webpack-cli": "^3.1.2"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run lint:check && npm run lint"
+        }
     }
-  }
 }
