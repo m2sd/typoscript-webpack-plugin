@@ -45,8 +45,8 @@
             setTimeout(function() {
                 doc.querySelectorAll(
                     '#webpack-plugin-loader,' +
-                        'script[src$="webpack-loading.js"],' +
-                        'link[href$="webpack-loading.css"]'
+                        'script[src*="webpack-loading.js"],' +
+                        'link[href*="webpack-loading.css"]'
                 ).forEach(function(node) {
                     node.parentElement.removeChild(node);
                 });
