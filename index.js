@@ -264,30 +264,36 @@ ${inputSrc.css}`;
         }
         const typoScript = [];
 
-        for (const extension of ['js', 'css']) {
-            const filename = `webpack-loading.${extension}`;
-            const publicFilepath = path.join(publicPath, filename);
-            const includeType =
-                extension === 'css' ? 'includeCSSLibs' : 'includeJSFooterlibs';
+        const scriptFilename = `webpack-loading.js`;
+        const scriptPublicPath = path.join(publicPath, scriptFilename);
 
-            let typoScriptLines = [];
-            compilation.assets[filename] = {
-                source: () => inputSrc[extension],
-                size: () => inputSrc[extension].length
-            };
-            typoScriptLines.push(
-                `webpack_loading = ${publicFilepath}`,
-                'webpack_loading.excludeFromConcatenation = 1'
-            );
-            if (extension === 'js') {
-                typoScriptLines.push(
-                    'webpack_loading.async = 1',
-                    'webpack_defer = 1'
-                );
-            }
-            typoScript.push(`${includeType} {`, ...typoScriptLines, '}');
-        }
+        // emit js in a file
+        compilation.assets[scriptFilename] = {
+            source: () => inputSrc.js,
+            size: () => inputSrc.js.length
+        };
+        // include js in typoscript
+        typoScript.push(
+            'includeJSFooterlibs {',
+            `webpack_loading = ${scriptPublicPath}`,
+            'webpack_loading.excludeFromConcatenation = 1',
+            'webpack_loading.async = 1',
+            'webpack_loading.defer = 1',
+            '}'
+        );
 
+        // include inline style in typoscript
+        typoScript.push(
+            'headerData {',
+            '11389465 = TEXT',
+            '11389465.value(',
+            '<style type="text/css">',
+            inputSrc.css.replace(/^\s*|\s*$/g, ''),
+            '</style>',
+            '}'
+        );
+
+        // include html template in typoscript
         typoScript.push(
             'footerData {',
             '11389465 = TEXT',
