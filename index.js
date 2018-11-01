@@ -206,7 +206,7 @@ class TypoScriptPlugin {
 
         const publicPath = this.options.typoScriptPublicPath;
         const inputSrc = {
-            js: fs.readFileSync(path.join(localPath, 'script.js'), 'utf8')
+            js: fs.readFileSync(path.join(localPath, 'script.min.js'), 'utf8')
         };
         if (externalPath.length) {
             inputSrc.css = fs.readFileSync(
