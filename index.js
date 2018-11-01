@@ -290,6 +290,7 @@ ${inputSrc.css}`;
             '<style type="text/css">',
             inputSrc.css.replace(/^\s*|\s*$/g, ''),
             '</style>',
+            ')',
             '}'
         );
 
