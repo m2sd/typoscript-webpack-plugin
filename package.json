@@ -1,6 +1,6 @@
 {
     "name": "typoscript-webpack-plugin",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "A simple plugin to generate typoscript statements to include generated assets",
     "main": "index.js",
     "files": [
@@ -8,8 +8,8 @@
     ],
     "scripts": {
         "test": "webpack --config dev/webpack.config.js && node ./dev/insert-template.js",
-        "lint": "eslint --ignore-path .gitignore .",
-        "lint:fix": "eslint --ignore-path .gitignore --fix .",
+        "lint": "eslint --ignore-path .gitignore --ignore-pattern *.min.js .",
+        "lint:fix": "npm run lint -- --fix .",
         "lint:check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check"
     },
     "repository": {

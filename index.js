@@ -61,7 +61,7 @@ const getChunkOptions = (chunk, options = {}, defaults = {}) => {
 };
 
 class TypoScriptPlugin {
-    constructor(options) {
+    constructor(options = {}) {
         const pluginDefaults = {
             filename: 'WebpackAssets.typoscript',
             typoScriptPublicPath: '/fileadmin/Resources/Public/',
@@ -79,14 +79,10 @@ class TypoScriptPlugin {
         /** @todo BRAKING CHANGE: remove */
         pluginDefaults.loading = false;
 
-        const pluginOptions = options || {};
+        /** @todo BRAKING CHANGE: change to filename */
+        const pluginOptions =
+            typeof options === 'string' ? { outputPath: options } : options;
 
-        if (typeof pluginOptions === 'string') {
-            pluginOptions = {
-                /** @todo BRAKING CHANGE: change to filename */
-                outputPath: pluginOptions
-            };
-        }
         /** @todo BRAKING CHANGE: set compiler.options.output.path as default output path */
         if (
             !pluginOptions.outputPath ||
@@ -154,28 +150,13 @@ class TypoScriptPlugin {
                     );
                 }
                 if (this.options.loading) {
-                    if (
-                        extension === 'css' &&
-                        !additionalTypoScript.find(item =>
-                            /^allWrap/.test(item)
-                        )
-                    ) {
-                        additionalTypoScript.unshift('allWrap = <!--|-->');
+                    if (extension === 'css') {
+                        additionalTypoScript.unshift(
+                            'allWrap = <noscript class="webpack-plugin-defer">|</noscript>'
+                        );
                     } else if (extension === 'js') {
-                        if (
-                            !additionalTypoScript.find(item =>
-                                /^async/.test(item)
-                            )
-                        ) {
-                            additionalTypoScript.unshift('async = 1');
-                        }
-                        if (
-                            !additionalTypoScript.find(item =>
-                                /^defer/.test(item)
-                            )
-                        ) {
-                            additionalTypoScript.unshift('defer = 1');
-                        }
+                        additionalTypoScript.unshift('async = 1');
+                        additionalTypoScript.unshift('defer = 1');
                     }
                 }
                 assetOutput.push(
@@ -225,7 +206,7 @@ class TypoScriptPlugin {
 
         const publicPath = this.options.typoScriptPublicPath;
         const inputSrc = {
-            js: fs.readFileSync(path.join(localPath, 'script.js'), 'utf8')
+            js: fs.readFileSync(path.join(localPath, 'script.min.js'), 'utf8')
         };
         if (externalPath.length) {
             inputSrc.css = fs.readFileSync(
@@ -264,7 +245,7 @@ ${inputSrc.css}`;
         }
         const typoScript = [];
 
-        const scriptFilename = `webpack-loading.js`;
+        const scriptFilename = `webpack-loading.min.js`;
         const scriptPublicPath = path.join(publicPath, scriptFilename);
 
         // emit js in a file
@@ -290,6 +271,7 @@ ${inputSrc.css}`;
             '<style type="text/css">',
             inputSrc.css.replace(/^\s*|\s*$/g, ''),
             '</style>',
+            ')',
             '}'
         );
 
