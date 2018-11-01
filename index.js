@@ -245,7 +245,7 @@ ${inputSrc.css}`;
         }
         const typoScript = [];
 
-        const scriptFilename = `webpack-loading.js`;
+        const scriptFilename = `webpack-loading.min.js`;
         const scriptPublicPath = path.join(publicPath, scriptFilename);
 
         // emit js in a file
