@@ -14,7 +14,7 @@
             .querySelectorAll('.webpack-plugin-defer')
             .forEach(function(node) {
                 if (/^\s*<link[\s\S]+rel="stylesheet"/.test(node.textContent)) {
-                    doc.body.replaceChild(
+                    doc.head.replaceChild(
                         createElementFromHTML(node.textContent),
                         node
                     );
