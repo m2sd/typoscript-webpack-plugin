@@ -80,7 +80,8 @@ class TypoScriptPlugin {
         pluginDefaults.loading = false;
 
         /** @todo BRAKING CHANGE: change to filename */
-        const pluginOptions = (typeof options === 'string' ? {outputPath: options} : options);
+        const pluginOptions =
+            typeof options === 'string' ? { outputPath: options } : options;
 
         /** @todo BRAKING CHANGE: set compiler.options.output.path as default output path */
         if (
@@ -150,8 +151,9 @@ class TypoScriptPlugin {
                 }
                 if (this.options.loading) {
                     if (extension === 'css') {
-                        additionalTypoScript.unshift('allWrap = <!--|-->');
-                        additionalTypoScript.unshift('alternate = 1');
+                        additionalTypoScript.unshift(
+                            'allWrap = <noscript class="webpack-plugin-defer">|</noscript>'
+                        );
                     } else if (extension === 'js') {
                         additionalTypoScript.unshift('async = 1');
                         additionalTypoScript.unshift('defer = 1');
