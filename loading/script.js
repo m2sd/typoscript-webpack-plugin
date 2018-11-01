@@ -1,6 +1,6 @@
 'use strict';
 
-(function(root, doc) {
+window.addEventListener('load', function() {
     if (!Node) {
         var Node = {};
     }
@@ -14,7 +14,7 @@
         var comments = [];
 
         for (var i = 0, len = children.length; i < len; i++) {
-            if (children[i].nodeType == Node.COMMENT_NODE) {
+            if (children[i].nodeType === Node.COMMENT_NODE) {
                 comments.push(children[i]);
             }
         }
@@ -30,21 +30,22 @@
     }
 
     var loading = 0,
-        loaded = doc.styleSheets.length;
-    getComments(doc.head).forEach(function(node) {
-        if (/^\s*<link\s+rel="stylesheet"/.test(node.nodeValue)) {
-            doc.head.replaceChild(createElementFromHTML(node.nodeValue), node);
+        loaded = document.styleSheets.length;
+    getComments(document.head).forEach(function(node) {
+        var match = node.nodeValue.match(/^\s*(<link[\s\S]+rel=")alternate stylesheet("[\s\S]+(?:>|<\/link>))\s*$/);
+        if (match) {
+            document.head.replaceChild(createElementFromHTML(match[1]+'stylesheet'+match[2]), node);
             loading++;
         }
     });
 
     var expected = loaded + loading;
     var check = setInterval(function() {
-        if (doc.styleSheets.length >= expected) {
+        if (document.styleSheets.length >= expected) {
             setTimeout(function() {
-                doc.getElementById('webpack-plugin-loader').style.opacity = 0;
+                document.getElementById('webpack-plugin-loader').style.opacity = 0;
                 setTimeout(function() {
-                    doc.querySelectorAll(
+                    document.querySelectorAll(
                         '#webpack-plugin-loader,' +
                             'script[src*="webpack-loading.js"],' +
                             'link[href*="webpack-loading.css"]'
@@ -56,4 +57,4 @@
             clearInterval(check);
         }
     }, 10);
-})(window, document);
+});

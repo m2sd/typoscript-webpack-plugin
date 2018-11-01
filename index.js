@@ -61,7 +61,7 @@ const getChunkOptions = (chunk, options = {}, defaults = {}) => {
 };
 
 class TypoScriptPlugin {
-    constructor(options) {
+    constructor(options = {}) {
         const pluginDefaults = {
             filename: 'WebpackAssets.typoscript',
             typoScriptPublicPath: '/fileadmin/Resources/Public/',
@@ -79,14 +79,9 @@ class TypoScriptPlugin {
         /** @todo BRAKING CHANGE: remove */
         pluginDefaults.loading = false;
 
-        const pluginOptions = options || {};
+        /** @todo BRAKING CHANGE: change to filename */
+        const pluginOptions = (typeof options === 'string' ? {outputPath: options} : options);
 
-        if (typeof pluginOptions === 'string') {
-            pluginOptions = {
-                /** @todo BRAKING CHANGE: change to filename */
-                outputPath: pluginOptions
-            };
-        }
         /** @todo BRAKING CHANGE: set compiler.options.output.path as default output path */
         if (
             !pluginOptions.outputPath ||
@@ -154,28 +149,12 @@ class TypoScriptPlugin {
                     );
                 }
                 if (this.options.loading) {
-                    if (
-                        extension === 'css' &&
-                        !additionalTypoScript.find(item =>
-                            /^allWrap/.test(item)
-                        )
-                    ) {
+                    if (extension === 'css') {
                         additionalTypoScript.unshift('allWrap = <!--|-->');
+                        additionalTypoScript.unshift('alternate = 1');
                     } else if (extension === 'js') {
-                        if (
-                            !additionalTypoScript.find(item =>
-                                /^async/.test(item)
-                            )
-                        ) {
-                            additionalTypoScript.unshift('async = 1');
-                        }
-                        if (
-                            !additionalTypoScript.find(item =>
-                                /^defer/.test(item)
-                            )
-                        ) {
-                            additionalTypoScript.unshift('defer = 1');
-                        }
+                        additionalTypoScript.unshift('async = 1');
+                        additionalTypoScript.unshift('defer = 1');
                     }
                 }
                 assetOutput.push(
