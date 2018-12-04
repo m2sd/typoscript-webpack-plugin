@@ -1,6 +1,6 @@
 {
     "name": "typoscript-webpack-plugin",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "description": "A simple plugin to generate typoscript statements to include generated assets",
     "main": "index.js",
     "files": [
@@ -41,11 +41,13 @@
     },
     "devDependencies": {
         "babel-eslint": "^10.0.1",
+        "clean-webpack-plugin": "^1.0.0",
         "css-loader": "^1.0.1",
         "eslint": "^5.7.0",
         "eslint-config-prettier": "^3.1.0",
         "eslint-plugin-html": "^4.0.6",
         "eslint-plugin-prettier": "^3.0.0",
+        "file-loader": "^2.0.0",
         "husky": "^1.1.2",
         "mini-css-extract-plugin": "^0.4.4",
         "prettier": "^1.14.3",

@@ -1,4 +1,10 @@
 body {
-    background: #333;
+    background: url() #333;
     color: #fff;
+}
+
+.logo {
+    width: 100px;
+    height: 68px;
+    background: center/contain no-repeat url('./images/logo.png');
 }

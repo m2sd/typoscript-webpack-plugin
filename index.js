@@ -5,6 +5,22 @@ const path = require('path');
 const pick = require('just-pick');
 const merge = require('deepmerge');
 
+/** internals */
+const pluginDefaults = {
+    filename: 'WebpackAssets.typoscript',
+    typoScriptPublicPath: '/fileadmin/Resources/Public/',
+    typoScriptRootPath: 'page',
+    typoScriptIncludeTypeDefaults: {
+        js: 'includeJSFooter',
+        css: 'includeCSS'
+    },
+    chunks: null,
+    loading: {
+        type: 'default',
+        background: '#2c3e50'
+    }
+};
+
 const convertIncludeTypes = option => {
     if (typeof option === 'string') {
         option = { all: option };
@@ -62,20 +78,6 @@ const getChunkOptions = (chunk, options = {}, defaults = {}) => {
 
 class TypoScriptPlugin {
     constructor(options = {}) {
-        const pluginDefaults = {
-            filename: 'WebpackAssets.typoscript',
-            typoScriptPublicPath: '/fileadmin/Resources/Public/',
-            typoScriptRootPath: 'page',
-            typoScriptIncludeTypeDefaults: {
-                js: 'includeJSFooter',
-                css: 'includeCSS'
-            },
-            chunks: null,
-            loading: {
-                type: 'default',
-                background: '#2c3e50'
-            }
-        };
         /** @todo BRAKING CHANGE: remove */
         pluginDefaults.loading = false;
 
@@ -90,6 +92,7 @@ class TypoScriptPlugin {
         ) {
             pluginOptions.outputPath = path.dirname(module.parent.filename);
         }
+
         if (
             typeof pluginOptions.loading === 'boolean' &&
             pluginOptions.loading
@@ -104,6 +107,7 @@ class TypoScriptPlugin {
                 background: '#2c3e50'
             };
         }
+
         this.options = merge(pluginDefaults, pluginOptions);
 
         if (this.options.typoScriptIncludeTypeDefaults) {
@@ -127,9 +131,13 @@ class TypoScriptPlugin {
         const output = [];
         options.files.forEach(asset => {
             const assetOutput = [];
-            const [, extension] = asset.match(/\.(js|css)$/);
+            const [, extension] = asset.match(/.*?(?:\.([^.]+))?$/);
             const name =
                 options.customName || 'webpack_' + (options.name || options.id);
+
+            if (!extension || !['js', 'css'].includes(extension)) {
+                return;
+            }
 
             assetOutput.push(
                 name +
@@ -208,6 +216,7 @@ class TypoScriptPlugin {
         const inputSrc = {
             js: fs.readFileSync(path.join(localPath, 'script.min.js'), 'utf8')
         };
+
         if (externalPath.length) {
             inputSrc.css = fs.readFileSync(
                 path.join(...externalPath, 'style.css'),
@@ -219,7 +228,8 @@ class TypoScriptPlugin {
                 'utf8'
             );
         }
-        inputSrc.css = `#webpack-plugin-loader {
+        inputSrc.css = `
+#webpack-plugin-loader {
     position: fixed;
     top: 0;
     right: 0;
@@ -230,7 +240,9 @@ class TypoScriptPlugin {
     -webkit-transition: opacity 0.5s;
     transition: opacity 0.5s;
 }
-${inputSrc.css}`;
+
+${inputSrc.css}
+`;
 
         if (externalPath.length) {
             inputSrc.html = fs.readFileSync(
@@ -253,6 +265,7 @@ ${inputSrc.css}`;
             source: () => inputSrc.js,
             size: () => inputSrc.js.length
         };
+
         // include js in typoscript
         typoScript.push(
             'includeJSFooterlibs {',
@@ -269,7 +282,9 @@ ${inputSrc.css}`;
             '11389465 = TEXT',
             '11389465.value(',
             '<style type="text/css">',
-            inputSrc.css.replace(/^\s*|\s*$/g, ''),
+            inputSrc.css
+                .replace(/^\s*|\s*([{};])\s*|\s*$/g, '$1')
+                .replace(/(\s)\s+/g, '$1'),
             '</style>',
             ')',
             '}'
@@ -281,7 +296,7 @@ ${inputSrc.css}`;
             '11389465 = TEXT',
             '11389465.value(',
             '<div id="webpack-plugin-loader">',
-            inputSrc.html.replace(/^\s*|\s*$/g, ''),
+            inputSrc.html.replace(/^\s*|\s*$/g, '').replace(/(\s)\s+/g, '$1'),
             '</div>',
             ')',
             '}'
