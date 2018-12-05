@@ -40,5 +40,6 @@ module.exports = {
     output: {
         filename: 'bundle.js',
         path: path.join(__dirname, 'dist', 'assets')
-    }
+    },
+    watch: process.env.WATCH_MODE === 'on'
 };
