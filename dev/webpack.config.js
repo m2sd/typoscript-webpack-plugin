@@ -1,6 +1,7 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPluin = require('mini-css-extract-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const Self = require('..');
 
 module.exports = {
@@ -23,9 +24,9 @@ module.exports = {
         new CleanWebpackPlugin(['dist']),
         new MiniCssExtractPluin(),
         new Self({
-            outputPath: path.join(__dirname, 'dist'),
+            outputPath: path.join(__dirname, 'dist', 'typoscript'),
             loading: {
-                customSource: path.join(__dirname, 'src/loading'),
+                customSource: path.join(__dirname, 'src', 'loading'),
                 background: '#333'
             },
             typoScriptPublicPath: '/',
@@ -33,10 +34,11 @@ module.exports = {
                 'if.equals.data = levelfield:-2,backend_layout_next_level,slide',
                 'if.equals.override.field = backend_layout'
             ]
-        })
+        }),
+        new ManifestPlugin()
     ],
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.join(__dirname, 'dist', 'assets')
     }
 };

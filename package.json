@@ -1,6 +1,6 @@
 {
     "name": "typoscript-webpack-plugin",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "description": "A simple plugin to generate typoscript statements to include generated assets",
     "main": "index.js",
     "files": [
@@ -53,7 +53,8 @@
         "prettier": "^1.14.3",
         "style-loader": "^0.23.1",
         "webpack": "^4.23.1",
-        "webpack-cli": "^3.1.2"
+        "webpack-cli": "^3.1.2",
+        "webpack-manifest-plugin": "^2.0.4"
     },
     "husky": {
         "hooks": {
