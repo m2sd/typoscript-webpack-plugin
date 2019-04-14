@@ -29,11 +29,7 @@ module.exports = {
                 customSource: path.join(__dirname, 'src', 'loading'),
                 background: '#333'
             },
-            typoScriptPublicPath: '/',
-            typoScriptAdditionalDefaults: [
-                'if.equals.data = levelfield:-2,backend_layout_next_level,slide',
-                'if.equals.override.field = backend_layout'
-            ]
+            typoScriptPublicPath: '/'
         }),
         new ManifestPlugin()
     ],

@@ -145,8 +145,8 @@ class TypoScriptPlugin {
                     path.join(this.options.typoScriptPublicPath, asset)
             );
 
+            const additionalTypoScript = [];
             if (options.additionalTypoScript) {
-                const additionalTypoScript = [];
                 if (options.additionalTypoScript.all) {
                     additionalTypoScript.push(
                         ...options.additionalTypoScript.all
@@ -157,22 +157,24 @@ class TypoScriptPlugin {
                         ...options.additionalTypoScript[extension]
                     );
                 }
-                if (this.options.loading) {
-                    if (extension === 'css') {
-                        additionalTypoScript.unshift(
-                            'allWrap = <noscript class="webpack-plugin-defer">|</noscript>'
-                        );
-                    } else if (extension === 'js') {
-                        additionalTypoScript.unshift('async = 1');
-                        additionalTypoScript.unshift('defer = 1');
-                    }
-                }
-                assetOutput.push(
-                    ...additionalTypoScript.map(
-                        typoScript => name + '.' + typoScript.replace(/^\./, '')
-                    )
-                );
             }
+
+            if (this.options.loading) {
+                if (extension === 'css') {
+                    additionalTypoScript.unshift(
+                        'allWrap = <noscript class="webpack-plugin-defer">|</noscript>'
+                    );
+                } else if (extension === 'js') {
+                    additionalTypoScript.unshift('async = 1');
+                    additionalTypoScript.unshift('defer = 1');
+                }
+            }
+
+            assetOutput.push(
+                ...additionalTypoScript.map(
+                    typoScript => name + '.' + typoScript.replace(/^\./, '')
+                )
+            );
 
             if (options.includeTypes) {
                 if (options.includeTypes.all) {
