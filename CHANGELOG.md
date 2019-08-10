@@ -1,26 +1,8 @@
-## <small>1.2.3 (2018-11-01)</small>
+# Changelog
 
-* fix(loading): improve preloading ([baea692](https://github.com/m2sd/typoscript-webpack-plugin/commit/baea692))
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-
-
-## <small>1.2.2 (2018-11-01)</small>
-
-* fix(loading): include css staticly ([a0b2982](https://github.com/m2sd/typoscript-webpack-plugin/commit/a0b2982))
-
-
-
-## <small>1.2.1 (2018-10-31)</small>
-
-* fix: move precommit hook into husky configuration ([1b75f37](https://github.com/m2sd/typoscript-webpack-plugin/commit/1b75f37))
-* fix(loading): add additional timeout to ensure css ([7d701db](https://github.com/m2sd/typoscript-webpack-plugin/commit/7d701db))
-* fix(loading): call test from regex instead from string ([0103d31](https://github.com/m2sd/typoscript-webpack-plugin/commit/0103d31))
-* fix(loading): use fuzzy attribute selector to avoid conflicts with timestamps ([9db9ba2](https://github.com/m2sd/typoscript-webpack-plugin/commit/9db9ba2))
-* chore(semver): bump version ([034abcb](https://github.com/m2sd/typoscript-webpack-plugin/commit/034abcb))
-* feat(loading): add loading resources and configuration ([2ea2f32](https://github.com/m2sd/typoscript-webpack-plugin/commit/2ea2f32))
-* feat(loading): add testing and finalize loaders ([bbb90e9](https://github.com/m2sd/typoscript-webpack-plugin/commit/bbb90e9))
-
-
+### [1.2.8](https://github.com/m2sd/typoscript-webpack-plugin/compare/v1.2.7...v1.2.8) (2019-08-10)
 
 ## 1.1.0 (2018-10-30)
 
@@ -37,6 +19,3 @@
 
 * Initial commit ([22a50ec](https://github.com/m2sd/typoscript-webpack-plugin/commit/22a50ec))
 * task (global): first release ([a473f2e](https://github.com/m2sd/typoscript-webpack-plugin/commit/a473f2e))
-
-
-
