@@ -1,5 +1,5 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPluin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const Self = require('..');
@@ -21,7 +21,7 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(['dist']),
+        new CleanWebpackPlugin(),
         new MiniCssExtractPluin(),
         new Self({
             outputPath: path.join(__dirname, 'dist', 'typoscript'),

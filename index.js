@@ -315,11 +315,10 @@ ${inputSrc.css}
                     chunkOptions = { name: chunkOptions };
                 }
 
-                const chunk = compilation.chunks.find(
-                    chunk =>
-                        chunkOptions.id
-                            ? chunkOptions.id === chunk.id
-                            : chunkOptions.name === chunk.name
+                const chunk = compilation.chunks.find(chunk =>
+                    chunkOptions.id
+                        ? chunkOptions.id === chunk.id
+                        : chunkOptions.name === chunk.name
                 );
                 outputLines.push(this.generateTypoScript(chunk, chunkOptions));
             });
