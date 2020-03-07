@@ -22,7 +22,8 @@
         "typo3",
         "typoscript",
         "webpack",
-        "webpack-plugin"
+        "webpack-plugin",
+        "deprecated"
     ],
     "author": "Michael Marcenich <info@m-squared-solutions.it>",
     "license": "MIT",
